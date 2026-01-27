@@ -1,0 +1,69 @@
+from django.shortcuts import render
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.request import Request
+from rest_framework import status
+from .models import Studenta01
+# Create your views here.
+@api_view(['GET'])
+def get_studenta01(request:Request):
+    studenta01_data = Studenta01.objects.all().values()
+    studenta01_list = list(studenta01_data)
+    return Response(studenta01_list, status=status.HTTP_200_OK)
+@api_view(['GET'])
+def get_studenta01_details(request:Request, pk:int):
+    try:
+        studenta01 = Studenta01.objects.get(pk=pk)
+    except Studenta01.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    return Response(studenta01.email, status=status.HTTP_200_OK)
+@api_view(['POST'])
+def create_studenta01(request:Request):
+    email = request.data.get('email', '')
+    password = request.data.get('password', '')
+    firstname = request.data.get('firstname', '')
+    lastname = request.data.get('lasstname', '')
+    dob = request.data.get('dob', None)
+    active = request.data.get('active', True)
+    score = request.data.get('score', 0)
+    gender = request.data.get('gender', '')
+    photo = request.data.get('photo', b'')
+    studenta01 = Studenta01.objects.create(
+        email=email,
+        password=password,
+        firstname=firstname,
+        lastname=lastname,
+        dob=dob,
+        active=active,
+        score=score,
+        gender=gender,
+        photo=photo
+    )
+    return Response({'id': studenta01.id}, status=status.HTTP_201_CREATED)
+@api_view(['PUT'])
+def update_studenta01(request:Request, pk:int): 
+    try:
+        studenta01 = Studenta01.objects.get(pk=pk)
+    except Studenta01.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    studenta01.email = request.data.get('email', studenta01.email)
+    studenta01.password = request.data.get('password', studenta01.password)
+    studenta01.firstname = request.data.get('firstname', studenta01.firstname)
+    studenta01.lastname = request.data.get('lastname', studenta01.lastname)
+    studenta01.dob = request.data.get('dob', studenta01.dob)
+    studenta01.active = request.data.get('active', studenta01.active)
+    studenta01.score = request.data.get('score', studenta01.score)
+    studenta01.gender = request.data.get('gender', studenta01.gender)
+    studenta01.photo = request.data.get('photo', studenta01.photo)
+    studenta01.save()
+    return Response(status=status.HTTP_200_OK)
+@api_view(['DELETE'])
+def delete_studenta01(request:Request, pk:int):
+    try:
+        studenta01 = Studenta01.objects.get(pk=pk)
+    except Studenta01.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    studenta01.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
