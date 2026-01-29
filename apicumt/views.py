@@ -59,41 +59,41 @@ def create_student(request: Request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 @api_view(['PUT'])
 def update_student(request: Request, pk):
- email           = request.data.get('email')
-    password        = request.data.get('password')
-    firstname       = request.data.get('firstname')
-    lastname        = request.data.get('lastname')
-    dob             = request.data.get('dob')
-    age             = request.data.get('age')
-    single          = request.data.get('single')
-    photo           = request.data.get('photo')
-    emailpattern    = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    passwordpattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
-    if not re.match(emailpattern, email):
-        return Response({'error': 'Invalid email format.'}, status=status.HTTP_402_PAYMENT_REQUIRED)
-    if not re.search(passwordpattern, password):
-        return Response({'error': 'Password must be strong.'}, status=status.HTTP_403_FORBIDDEN)
-    if firstname is None or firstname.strip() == "":
-        return Response({'error': 'First name cannot be empty.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
-    if lastname is None or lastname.strip() == "":
-        return Response({'error': 'Last name cannot be empty.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
-    if dob is None:
-        return Response({'error': 'Date of Birth is required.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
-    if single is None:
-        return Response({'error': 'Single status is required.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
-    if age < 0 or age > 100:
-        return Response({'error': 'age must be between 0 and 100.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
-    
-    try:
-        student = Students.objects.get(pk=pk)
-    except Students.DoesNotExist:
-        return Response({'error': 'Student not found'}, status=status.HTTP_404_NOT_FOUND)
-
-    serializer = StudentsSerializer(student, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+   email           = request.data.get('email')
+   password        = request.data.get('password')
+   firstname       = request.data.get('firstname')
+   lastname        = request.data.get('lastname')
+   dob             = request.data.get('dob')
+   age             = request.data.get('age')
+   single          = request.data.get('single')
+   photo           = request.data.get('photo')
+   emailpattern    = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+   passwordpattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+   if not re.match(emailpattern, email):
+       return Response({'error': 'Invalid email format.'}, status=status.HTTP_402_PAYMENT_REQUIRED)
+   if not re.search(passwordpattern, password):
+       return Response({'error': 'Password must be strong.'}, status=status.HTTP_403_FORBIDDEN)
+   if firstname is None or firstname.strip() == "":
+       return Response({'error': 'First name cannot be empty.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+   if lastname is None or lastname.strip() == "":
+       return Response({'error': 'Last name cannot be empty.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+   if dob is None:
+       return Response({'error': 'Date of Birth is required.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+   if single is None:
+       return Response({'error': 'Single status is required.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+   if age < 0 or age > 100:
+       return Response({'error': 'age must be between 0 and 100.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+   
+   try:
+       student = Students.objects.get(pk=pk)
+   except Students.DoesNotExist:
+       return Response({'error': 'Student not found'}, status=status.HTTP_404_NOT_FOUND)
+   
+   serializer = StudentsSerializer(student, data=request.data)
+   if serializer.is_valid():
+       serializer.save()
+       return Response(serializer.data, status=status.HTTP_200_OK)
+   return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 @api_view(['DELETE'])
 def delete_student(request: Request, pk):
     try:
