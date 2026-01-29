@@ -102,13 +102,3 @@ def delete_student(request: Request, pk):
         return Response({'error': 'Student not found'}, status=status.HTTP_404_NOT_FOUND)
     student.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
- @api_view(['POST'])
-def login_student(request: Request):
-    email       = request.data.get('email')
-    password    = request.data.get('password')
-    try:
-        student = Students.objects.get(email=email, password=password)
-    except Students.DoesNotExist:
-        return Response({'error': 'Invalid email or password'}, status=status.HTTP_404_NOT_FOUND)
-    serializerData = StudentsSerializer(student)
-    return Response(serializerData.data, status=status.HTTP_200_OK)
