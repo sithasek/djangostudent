@@ -24,35 +24,32 @@ def get_student_details(request: Request, pk):
     return Response(serializerData.data, status=status.HTTP_200_OK)
 @api_view(['POST'])
 def create_student(request: Request):
-    email = request.data.get('email')
-    password = request.data.get('password')
-    firstname = request.data.get('firstname')
-    lastname = request.data.get('lastname')
-    dob = request.data.get('dob')
-    active = request.data.get('active')
-    score = request.data.get('score')
-    gender = request.data.get('gender')
-    photo = request.data.get('photo')
-    emailpattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    passwordpattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+    email               = request.data.get('email')
+    password            = request.data.get('password')
+    firstname           = request.data.get('firstname')
+    lastname            = request.data.get('lastname')
+    dob                 = request.data.get('dob')
+    age                 = request.data.get('age')
+    single              = request.data.get('single')
+    photo               = request.data.get('photo')
+    emailpattern        = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    passwordpattern     = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
     if not re.match(emailpattern, email):
-        return Response({'error': 'Invalid email format.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        return Response({'error': 'Invalid email format.'}, status=status.HTTP_402_PAYMENT_REQUIRED)
     if not re.search(passwordpattern, password):
-        return Response({'error': 'Password must be strong.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        return Response({'error': 'Password must be strong.'}, status=status.HTTP_403_FORBIDDEN)
     if firstname is None or firstname.strip() == "":
         return Response({'error': 'First name cannot be empty.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
     if lastname is None or lastname.strip() == "":
         return Response({'error': 'Last name cannot be empty.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
     if dob is None:
         return Response({'error': 'Date of Birth is required.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
-    if active is None:
-        return Response({'error': 'Active status is required.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
-    if score < 0 or score > 100:
-        return Response({'error': 'Score must be between 0 and 100.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
-    if  gender not in ['Male', 'Female']:
-        return Response({'error': 'Gender must be Male or Female.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+    if single is None:
+        return Response({'error': 'single status is required.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+    if age < 0 or age > 100:
+        return Response({'error': 'age must be between 0 and 100.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
     if Students.objects.filter(email=email).exists():
-        return Response({'error': 'Email already exists.'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'error': 'Email already exists.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
     data=request.data
     serializer = StudentsSerializer(data=data)
@@ -62,33 +59,31 @@ def create_student(request: Request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 @api_view(['PUT'])
 def update_student(request: Request, pk):
-    email = request.data.get('email')
-    password = request.data.get('password')
-    firstname = request.data.get('firstname')
-    lastname = request.data.get('lastname')
-    dob = request.data.get('dob')
-    active = request.data.get('active')
-    score = request.data.get('score')
-    gender = request.data.get('gender')
-    photo = request.data.get('photo')
-    emailpattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+ email           = request.data.get('email')
+    password        = request.data.get('password')
+    firstname       = request.data.get('firstname')
+    lastname        = request.data.get('lastname')
+    dob             = request.data.get('dob')
+    age             = request.data.get('age')
+    single          = request.data.get('single')
+    photo           = request.data.get('photo')
+    emailpattern    = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     passwordpattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
     if not re.match(emailpattern, email):
-        return Response({'error': 'Invalid email format.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        return Response({'error': 'Invalid email format.'}, status=status.HTTP_402_PAYMENT_REQUIRED)
     if not re.search(passwordpattern, password):
-        return Response({'error': 'Password must be strong.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        return Response({'error': 'Password must be strong.'}, status=status.HTTP_403_FORBIDDEN)
     if firstname is None or firstname.strip() == "":
         return Response({'error': 'First name cannot be empty.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
     if lastname is None or lastname.strip() == "":
         return Response({'error': 'Last name cannot be empty.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
     if dob is None:
         return Response({'error': 'Date of Birth is required.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
-    if active is None:
-        return Response({'error': 'Active status is required.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
-    if score < 0 or score > 100:
-        return Response({'error': 'Score must be between 0 and 100.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
-    if  gender not in ['Male', 'Female']:
-        return Response({'error': 'Gender must be Male or Female.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+    if single is None:
+        return Response({'error': 'Single status is required.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+    if age < 0 or age > 100:
+        return Response({'error': 'age must be between 0 and 100.'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+    
     try:
         student = Students.objects.get(pk=pk)
     except Students.DoesNotExist:
@@ -107,3 +102,13 @@ def delete_student(request: Request, pk):
         return Response({'error': 'Student not found'}, status=status.HTTP_404_NOT_FOUND)
     student.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+ @api_view(['POST'])
+def login_student(request: Request):
+    email       = request.data.get('email')
+    password    = request.data.get('password')
+    try:
+        student = Students.objects.get(email=email, password=password)
+    except Students.DoesNotExist:
+        return Response({'error': 'Invalid email or password'}, status=status.HTTP_404_NOT_FOUND)
+    serializerData = StudentsSerializer(student)
+    return Response(serializerData.data, status=status.HTTP_200_OK)
