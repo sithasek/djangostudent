@@ -97,5 +97,26 @@ def update_studentco2(request: Request, pk):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['DELETE'])
+def delete_studentco2(request: Request, pk):
+    try:
+        studentco2 = Studentc02.objects.get(pk=pk)
+    except Studentc02.DoesNotExist:
+        return Response({'error': 'Student not found'}, status=status.HTTP_404_NOT_FOUND)
 
+    studentco2.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+def login_studentco2(request: Request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+
+    try:
+        studentco2 = Studentc02.objects.get(email=email, password=password)
+    except Studentc02.DoesNotExist:
+        return Response({'error': 'Invalid email or password'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    serializerData = Studentc02Serializer(studentco2)
+    return Response(serializerData.data, status=status.HTTP_200_OK)
     
